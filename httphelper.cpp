@@ -50,10 +50,13 @@ void process_request(int fd, const char *root_dir){
     char *url;
 
     vector<string> request_parts = split(bufrequest, '\n');
-    for(auto s: request_parts){
+    for (vector<string>::const_iterator it = request_parts.begin(); it != request_parts.end(); it++) {
+    //for(auto s: request_parts){
         int i = 0;
-        vector<string> protocol_parts = request_parts = split(s, ' ');
-        for(auto p: protocol_parts){
+        vector<string> protocol_parts = request_parts = split(*it, ' ');
+        for (vector<string>::const_iterator it1 = protocol_parts.begin(); it != protocol_parts.end(); it1++) {
+        //for(auto p: protocol_parts){
+            string p = *it1;
             unsigned long size = strlen(p.c_str())+1;
             if(i == 0){
                 protocol = (char*)malloc(size);

@@ -56,7 +56,8 @@ int main(int argc, char **argv){
             case 'd':
                 str_dir.append(optarg);
                 if(str_dir[str_dir.size()-1] == '/'){
-                    str_dir.pop_back();
+                    str_dir = str_dir.substr(0, str_dir.size()-2);
+                    //str_dir.pop_back();
                 }
 
                 //printf("d - %s\n", optarg);
