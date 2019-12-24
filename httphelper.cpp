@@ -20,11 +20,10 @@ static const char* template200_image_jpeg = "HTTP/1.0 200 OK\r\n"
 		       	   "%s";
 
 static const char template404[] = "HTTP/1.0 404 NOT FOUND\r\n"
-                    "Content-length: %ld\r\n"
+                    "Content-length: 0\r\n"
 		       	    "Connection: close\r\n"
                     "Content-Type: text/html\r\n"
-                    "\r\n"
-                    "%s";
+                    "\r\n";
 
 const char filenotfound[] = "File not found";
 
@@ -116,9 +115,11 @@ void process_request(int fd, const char *root_dir){
     if(size == -1 || ext != "html"){
         //printf("1Not found - %s\n", full_path);
 
-        bufresponse = (char*)malloc(strlen(template404) + sizeof(filenotfound) + 1);
+        //bufresponse = (char*)malloc(strlen(template404) + sizeof(filenotfound) + 1);
+        bufresponse = (char*)malloc(strlen(template404) + 1);
 
-        ssize_t nresponse = sprintf(bufresponse, template404, sizeof(filenotfound)-1, filenotfound);
+        ssize_t nresponse = sprintf(bufresponse, template404);
+        //ssize_t nresponse = sprintf(bufresponse, template404, sizeof(filenotfound)-1, filenotfound);
         bufresponse[nresponse] = 0;
 
         write(fd, bufresponse, nresponse);
