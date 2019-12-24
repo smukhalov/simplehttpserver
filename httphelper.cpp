@@ -106,7 +106,8 @@ void process_request(int fd, const char *root_dir){
     //printf("full_path - %s\n", full_path);
 
     string std_filename(full_path);
-    string ext = str_tolower(std_filename.substr(std_filename.find_last_of(".") + 1));
+    //string ext = str_tolower(std_filename.substr(std_filename.find_last_of(".") + 1));
+    string ext = std_filename.substr(std_filename.find_last_of(".") + 1);
     //printf("ext - %s\n", ext.c_str());
 
     size_t size = 0;

@@ -1,6 +1,6 @@
 #include "unp.h"
 
-std::string str_tolower(std::string s) {
+/*std::string str_tolower(std::string s) {
     std::transform(s.begin(), s.end(), s.begin(), 
                 // static_cast<int(*)(int)>(std::tolower)         // wrong
                 // [](int c){ return std::tolower(c); }           // wrong
@@ -8,7 +8,7 @@ std::string str_tolower(std::string s) {
                    [](unsigned char c){ return std::tolower(c); } // correct
                   );
     return s;
-}
+}*/
 
 vector<string> split(const string& str, const char& ch) {
     string next;
