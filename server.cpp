@@ -152,6 +152,7 @@ int main(int argc, char **argv){
 
             parent(sv[0], connfd);
             close(connfd);
+            close(sv[0]);
             break;
         }
 	}
