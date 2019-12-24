@@ -10,6 +10,7 @@ void getfile(const char* filename, size_t *size){
 
     streambuf * pbuf = file.rdbuf();
     *size = pbuf->pubseekoff(0, file.end);
+    file.close();
 }
 
 void readfile(const char* filename, char *content)
@@ -33,7 +34,7 @@ void readfile(const char* filename, char *content)
     //printf("%s\n", content);
 }
 
-bool check_dir(const char *path){
+/*bool check_dir(const char *path){
     DIR *dir = opendir(path);
     if(dir == NULL){
         return false;
@@ -48,4 +49,4 @@ bool check_dir(const char *path){
     if(entry->d_type == DT_UNKNOWN){
         return false;
     }
-}
+}*/
