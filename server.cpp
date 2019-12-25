@@ -118,12 +118,19 @@ int main(int argc, char **argv){
         exit(EXIT_FAILURE);
     }
 
+    signal(SIGHUP, SIG_IGN);
+    signal(SIGCHLD, SIG_IGN);
+    signal(CLONE_CHILD_CLEARTID, SIG_IGN);
+    signal(CLONE_CHILD_SETTID, SIG_IGN);
+    //printf("Before for\n");
 	for ( ; ; ) {
 		connfd = accept(listenfd, NULL, NULL);
         if(connfd < 0){
             perror("accept");
             exit(EXIT_FAILURE);
         }
+
+        //printf("connfd - %d\n", connfd);
 
         int sv[2];
         int pid;
@@ -135,6 +142,7 @@ int main(int argc, char **argv){
 
         switch ((pid = fork())) {
         case 0:
+            //printf("Fork создан - %d\n", getpid());
             close(listenfd);
             close(sv[0]);
             close(connfd);
@@ -142,8 +150,9 @@ int main(int argc, char **argv){
             child(sv[1], str_dir.c_str());
             
             close(sv[1]);
-            return 0;
-            break;
+            //printf("Fork завершен - %d\n", getpid());
+            exit(0);
+            //break;
         case -1:
             perror("fork");
             exit(EXIT_FAILURE);
@@ -153,7 +162,7 @@ int main(int argc, char **argv){
             parent(sv[0], connfd);
             close(connfd);
             close(sv[0]);
-            break;
+            //break;
         }
 	}
 	return 0;

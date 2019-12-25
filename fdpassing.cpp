@@ -29,17 +29,17 @@ ssize_t sock_fd_read(int sock, void *buf, ssize_t bufsize, int *fd)
         size = recvmsg (sock, &msg, 0);
         if (size < 0) {
             perror ("recvmsg");
-            exit(1);
+            return 1;
         }
         cmsg = CMSG_FIRSTHDR(&msg);
         if (cmsg && cmsg->cmsg_len == CMSG_LEN(sizeof(int))) {
             if (cmsg->cmsg_level != SOL_SOCKET) {
                 fprintf (stderr, "invalid cmsg_level %d\n", cmsg->cmsg_level);
-                exit(1);
+                return 1;
             }
             if (cmsg->cmsg_type != SCM_RIGHTS) {
                 fprintf (stderr, "invalid cmsg_type %d\n", cmsg->cmsg_type);
-                exit(1);
+                return 1;
             }
 
             *fd = *((int *) CMSG_DATA(cmsg));
@@ -47,11 +47,11 @@ ssize_t sock_fd_read(int sock, void *buf, ssize_t bufsize, int *fd)
         } else
             *fd = -1;
     } else {
-        //printf("sock_fd_read - if (fd) == false\n");
-        size = read (sock, buf, bufsize);
+        printf("sock_fd_read - if (fd) == false\n");
+        size = recv (sock, buf, bufsize, MSG_NOSIGNAL);
         if (size < 0) {
             perror("read");
-            exit(1);
+            return 1;
         }
     }
 
@@ -110,14 +110,14 @@ void child(int sock, const char *root_dir)
     char    buf[16];
     ssize_t size;
 
-    //printf("child sock - %d\n", sock);
+    //printf("child sock - %d, pid - %d \n", sock, getpid());
 
-    sleep(1);
-    for (;;) {
+    //sleep(1);
+    //for (;;) {
         size = sock_fd_read(sock, buf, sizeof(buf), &fd);
         if (size <= 0){
             //printf("child break size - %ld\n", size);
-            break;
+            return;
         }
 
         if (fd != -1) {
@@ -127,7 +127,7 @@ void child(int sock, const char *root_dir)
             process_request(fd, root_dir);
             close(fd);
         }
-    }
+    //}
 
     //printf("child end\n");
 }

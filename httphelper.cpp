@@ -32,13 +32,16 @@ void process_request(int fd, const char *root_dir){
     char bufrequest[4096];
     char *bufresponse;
 
-    ssize_t nrequest = read(fd, bufrequest, sizeof(bufrequest));
+//printf("before process_request - pid - %d\n", getpid());
+    ssize_t nrequest = recv(fd, bufrequest, sizeof(bufrequest), MSG_NOSIGNAL | MSG_DONTWAIT);
+    
+    //printf("after process_request - %ld, pid - %d\n", nrequest, getpid());
     if(nrequest == 0){ //EOF
         return;
     }
     
     if(nrequest < 0){
-        perror("process_request read");
+        //perror("process_request read");
         return;
     }
 
@@ -122,7 +125,7 @@ void process_request(int fd, const char *root_dir){
         //ssize_t nresponse = sprintf(bufresponse, template404, sizeof(filenotfound)-1, filenotfound);
         bufresponse[nresponse] = 0;
 
-        write(fd, bufresponse, nresponse);
+        send(fd, bufresponse, nresponse, MSG_NOSIGNAL);
     }
     else {
         char *content = (char*)malloc(size+1);
@@ -135,7 +138,7 @@ void process_request(int fd, const char *root_dir){
         ssize_t nresponse = sprintf(bufresponse, template200, size, content);
         bufresponse[nresponse] = 0;
 
-        write(fd, bufresponse, nresponse);
+        send(fd, bufresponse, nresponse, MSG_NOSIGNAL);
     }
 
     free(full_path);
