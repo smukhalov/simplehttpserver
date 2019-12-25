@@ -33,7 +33,7 @@ void process_request(int fd, const char *root_dir){
     char *bufresponse;
 
 //printf("before process_request - pid - %d\n", getpid());
-    ssize_t nrequest = recv(fd, bufrequest, sizeof(bufrequest), MSG_NOSIGNAL | MSG_DONTWAIT);
+    ssize_t nrequest = recv(fd, bufrequest, sizeof(bufrequest), MSG_NOSIGNAL | MSG_WAITALL);
     
     //printf("after process_request - %ld, pid - %d\n", nrequest, getpid());
     if(nrequest == 0){ //EOF
